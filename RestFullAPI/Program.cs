@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.HttpOverrides;
 using RestFullAPI.ServiceExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
 // Add services to the container.
 
 builder.Services.ConfigureCors();
+builder.Services.ConfigureNlog(builder.Environment.EnvironmentName);
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -33,19 +35,6 @@ app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
-app.Use(async (context, next) =>
-{
-    Console.WriteLine("Before next");
-    await next.Invoke();
-    Console.WriteLine("After next");
-});
-
-app.Run(async context =>
-{
-    Console.WriteLine("Writing response");
-    await context.Response.WriteAsync("Helo world");
-});
 
 app.MapControllers();
 

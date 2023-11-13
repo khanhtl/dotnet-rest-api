@@ -1,4 +1,8 @@
-﻿namespace RestFullAPI.ServiceExtensions
+﻿using Contracts;
+using LoggerService;
+using NLog;
+
+namespace RestFullAPI.ServiceExtensions
 {
     public static class ServiceExtensions
     {
@@ -16,6 +20,12 @@
                 });
 
             });
+        }
+
+        public static void ConfigureNlog(this IServiceCollection services, string env)
+        {
+            LogManager.Setup().LoadConfigurationFromFile(string.Concat(Directory.GetCurrentDirectory(), $"/nlog.{env}.config"));
+            services.AddSingleton<ILoggerManager, LoggerManager>();
         }
     }
 }
