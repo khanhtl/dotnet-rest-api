@@ -34,6 +34,19 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.Use(async (context, next) =>
+{
+    Console.WriteLine("Before next");
+    await next.Invoke();
+    Console.WriteLine("After next");
+});
+
+app.Run(async context =>
+{
+    Console.WriteLine("Writing response");
+    await context.Response.WriteAsync("Helo world");
+});
+
 app.MapControllers();
 
 app.Run();
